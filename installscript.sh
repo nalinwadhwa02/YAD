@@ -65,7 +65,7 @@ mount "${part_boot}" /mnt/boot
 pacstrap /mnt base linux linux-firmware
 genfstab -U /mnt >> /mnt/etc/fstab
 
-cat << EOF > /root/part2.sh
+cat << EOF > /mnt/part2.sh
 #!/bin/bash
 
 ln -sf /usr/share/zoneinfo/${timezone} /etc/localtime
@@ -96,5 +96,5 @@ exit
 EOF
 
 chmod 700 /root/part2.sh
-arch-chroot /mnt ./root/part2.sh
+arch-chroot /mnt ./part2.sh
 
