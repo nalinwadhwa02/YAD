@@ -66,6 +66,7 @@ pacstrap /mnt base linux linux-firmware
 genfstab -U /mnt >> /mnt/etc/fstab
 
 cat << EOF > /root/part2.sh
+
 ln -sf /usr/share/zoneinfo/${timezone} /etc/localtime
 hwclock --systohc
 
@@ -88,7 +89,7 @@ sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/' /etc/sudoers
 grub-install --recheck ${part_root}
 grub-mkconfig -o /boot/grub/grub.cfg
 
-pacman -Syu --no-confirm vim htop neofetch
+pacman -Syu --noconfirm vim htop neofetch
 
 exit
 
