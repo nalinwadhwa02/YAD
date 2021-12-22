@@ -85,9 +85,10 @@ mkinitcpio -P
 useradd -mU -s /usr/bin/bash -G wheel,uucp,video,audio,storage,games,input "$user"
 echo "$user:$password" | chpasswd
 echo "root:$password" | chpasswd
+
 sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/' /etc/sudoers
 
-grub-install --recheck ${part_root}
+grub-install --target=x86_64-efi --bootloader-id=GRUB --efi-directory=/boot
 grub-mkconfig -o /boot/grub/grub.cfg
 
 pacman -Syu --noconfirm vim htop neofetch
