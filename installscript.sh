@@ -86,10 +86,10 @@ grub-install --recheck ${part_root}
 grub-mkconfig -o /boot/grub/grub.cfg
 
 pacman -Syu --no-confirm vim htop neofetch
+
 exit
 
 EOF
 
 arch-chroot /mnt /root/part2.sh
 
-reboot
