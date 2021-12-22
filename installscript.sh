@@ -80,7 +80,7 @@ systemctl enable NetworkManager.service
 echo "${hostname}" > /etc/hostname
 mkinitcpio -P
 
-useradd -mU -s /usr/bin/bash -G wheel,uucp,video,audio,storage,games,input "$user"
+useradd --create-home -s /usr/bin/bash -G wheel,uucp,video,audio,storage,games,input "$user"
 echo "$user:$password" | chpasswd
 echo "root:$password" | chpasswd
 
@@ -91,7 +91,9 @@ mount "${part_boot}" /boot/EFI
 grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck
 grub-mkconfig -o /boot/grub/grub.cfg
 
-pacman -Syu --noconfirm vim htop neofetch
+pacman -Syu --noconfirm vim htop neofetch xorg i3 xorg-xinit
+echo "exec i3" >> /home/${user}/.xinitrc
+
 
 exit
 EOF
