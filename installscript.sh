@@ -1,5 +1,8 @@
 #!/bin/bash
 
+exec 1> >(tee "stdout.log")
+exec 2> >(tee "stderr.log")
+
 echo -n "Hostname: "
 read hostname
 : ${hostname:?"Missing hostname"}
