@@ -65,7 +65,9 @@ mount "${part_boot}" /mnt/boot
 pacstrap /mnt base linux linux-firmware
 genfstab -U /mnt >> /mnt/etc/fstab
 
-cat << EOF > /root/part2.sh
+cat << EOF > bash /root/part2.sh
+
+#!/bin/bash
 
 ln -sf /usr/share/zoneinfo/${timezone} /etc/localtime
 hwclock --systohc
