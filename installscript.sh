@@ -18,7 +18,9 @@ echo
 echo
 devicelist=$(lsblk -dplnx size -o name,size | grep -Ev "boot|rpmb|loop" | tac)
 echo -n "devices: " 
+echo
 echo -n "${devicelist}" 
+echo
 echo -n "Enter device to use: "
 read device
 echo
@@ -57,7 +59,7 @@ mount "${part_root}" /mnt
 mkdir /mnt/boot
 mount "${part_boot}" /mnt/boot
 
-pacstrap /mnt base linux linux-firmware networkmanager grub efibootmgr man-db e2fsprogs
+pacstrap /mnt base linux linux-firmware
 genfstab -U /mnt >> /mnt/etc/fstab
 
 cat << EOF > /root/part2.sh
@@ -69,20 +71,23 @@ echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
 locale-gen
 echo "LANG=en_US.UTF-8" > /etc/locale.conf
 
+pacman -S --noconfirm base-devel sudo grub networkmanager
 systemctl enable NetworkManager.service
 
 echo "${hostname}" > /etc/hostname
 mkinitcpio -P
 
-useradd -mU -s /usr/bin/zsh -G wheel,uucp,video,audio,storage,games,input "$user"
+useradd -mU -s /usr/bin/bash -G wheel,uucp,video,audio,storage,games,input "$user"
 echo "$user:$password" | chpasswd
 echo "root:$password" | chpasswd
+sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/' /etc/sudoers
 
-grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
+grub-install --recheck ${part_root}
+grub-mkconfig -o /boot/grub/grub.cfg
 
-pacman -Syu git vim htop neofetch
-
+pacman -Syu --no-confirm vim htop neofetch
 exit
+
 EOF
 
 arch-chroot /mnt /root/part2.sh
