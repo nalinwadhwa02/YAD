@@ -4,29 +4,31 @@
 set -uo pipefail
 trap 's=$?; echo "$0: Error on line "$LINENO": $BASH_COMMAND"; exit $s' ERR
 
-hostname=$(dialog --stdout --inputbox "Enter hostname" 0 0) || exit 1
-clear
-: ${hostname:?"hostname cannot be empty"}
-
-user=$(dialog --stdout --inputbox "Enter admin username" 0 0) || exit 1
-clear
-: ${user:?"user cannot be empty"}
-
-password=$(dialog --stdout --passwordbox "Enter admin password" 0 0) || exit 1
-clear
-: ${password:?"password cannot be empty"}
-password2=$(dialog --stdout --passwordbox "Enter admin password again" 0 0) || exit 1
-clear
+echo -n "Hostname: "
+read hostname
+: ${hostname:?"Missing hostname"}
+echo
+echo -n "User: "
+read user 
+: ${hostname:?"Missing user"}
+echo
+echo -n "Password: "
+read -s password
+echo
+echo -n "Repeat Password: "
+read -s password2
+echo
 [[ "$password" == "$password2" ]] || ( echo "Passwords did not match"; exit 1; )
-
+echo
 devicelist=$(lsblk -dplnx size -o name,size | grep -Ev "boot|rpmb|loop" | tac)
-device=$(dialog --stdout --menu "Select installation disk" 0 0 0 ${devicelist}) || exit 1
-clear
-
-
-timezone=$(dialog --stdout --inputbox "Enter timezone" 0 0) || exit 1
-clear
+echo -n "devices \n${devicelist}\n Enter device to use :"
+read device
+echo
+echo -n "Enter timezone: "
+read timezone
+echo
 : ${timezone:?"timezone needs to be Region/City"}
+clear
 
 timedatectl set-ntp true
 
