@@ -95,6 +95,6 @@ pacman -Syu --noconfirm vim htop neofetch
 exit
 EOF
 
-chmod 700 /root/part2.sh
+chmod 700 /mnt/part2.sh
 arch-chroot /mnt ./part2.sh
 
