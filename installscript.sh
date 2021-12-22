@@ -59,8 +59,6 @@ mkfs.f2fs -f "${part_root}"
 
 swapon "${part_swap}"
 mount "${part_root}" /mnt
-mkdir /mnt/boot
-mount "${part_boot}" /mnt/boot
 
 pacstrap /mnt base linux linux-firmware
 genfstab -U /mnt >> /mnt/etc/fstab
@@ -76,7 +74,7 @@ echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
 locale-gen
 echo "LANG=en_US.UTF-8" > /etc/locale.conf
 
-pacman -S --noconfirm base-devel sudo grub networkmanager
+pacman -S --noconfirm base-devel sudo grub networkmanager efibootmgr
 systemctl enable NetworkManager.service
 
 echo "${hostname}" > /etc/hostname
@@ -88,7 +86,9 @@ echo "root:$password" | chpasswd
 
 sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/' /etc/sudoers
 
-grub-install --target=x86_64-efi --bootloader-id=GRUB --efi-directory=/boot
+mkdir /boot/EFI
+mount "${part_boot}" /boot/EFI
+grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck
 grub-mkconfig -o /boot/grub/grub.cfg
 
 pacman -Syu --noconfirm vim htop neofetch
