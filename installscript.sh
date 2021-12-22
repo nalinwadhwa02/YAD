@@ -66,7 +66,6 @@ pacstrap /mnt base linux linux-firmware
 genfstab -U /mnt >> /mnt/etc/fstab
 
 cat << EOF > /root/part2.sh
-
 #!/bin/bash
 
 ln -sf /usr/share/zoneinfo/${timezone} /etc/localtime
@@ -94,8 +93,8 @@ grub-mkconfig -o /boot/grub/grub.cfg
 pacman -Syu --noconfirm vim htop neofetch
 
 exit
-
 EOF
 
-arch-chroot /mnt bash /root/part2.sh
+chmod 700 /root/part2.sh
+arch-chroot /mnt ./root/part2.sh
 
