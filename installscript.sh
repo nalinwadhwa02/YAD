@@ -65,7 +65,7 @@ mount "${part_boot}" /mnt/boot
 pacstrap /mnt base linux linux-firmware
 genfstab -U /mnt >> /mnt/etc/fstab
 
-cat << EOF > bash /root/part2.sh
+cat << EOF > /root/part2.sh
 
 #!/bin/bash
 
@@ -97,5 +97,5 @@ exit
 
 EOF
 
-arch-chroot /mnt /root/part2.sh
+arch-chroot /mnt bash /root/part2.sh
 
