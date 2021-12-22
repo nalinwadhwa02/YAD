@@ -57,10 +57,10 @@ mount "${part_root}" /mnt
 mkdir /mnt/boot
 mount "${part_boot}" /mnt/boot
 
-pacstrap /mnt base linux linux-firmware networkmanager
+pacstrap /mnt base linux linux-firmware networkmanager grub efibootmgr man-db e2fsprogs
 genfstab -U /mnt >> /mnt/etc/fstab
 
-arch-chroot /mnt
+cat << EOF > /root/part2.sh
 ln -sf /usr/share/zoneinfo/${timezone} /etc/localtime
 hwclock --systohc
 
@@ -78,7 +78,13 @@ useradd -mU -s /usr/bin/zsh -G wheel,uucp,video,audio,storage,games,input "$user
 echo "$user:$password" | chpasswd
 echo "root:$password" | chpasswd
 
+grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
+
 pacman -Syu git vim htop neofetch
 
 exit
+EOF
+
+arch-chroot /mnt /root/part2.sh
+
 reboot
