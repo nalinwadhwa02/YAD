@@ -1,8 +1,4 @@
 #!/bin/bash
-# WARNING: this script will destroy data on the selected disk.
-# This script can be run by executing the following:
-set -uo pipefail
-trap 's=$?; echo "$0: Error on line "$LINENO": $BASH_COMMAND"; exit $s' ERR
 
 echo -n "Hostname: "
 read hostname
@@ -21,7 +17,9 @@ echo
 [[ "$password" == "$password2" ]] || ( echo "Passwords did not match"; exit 1; )
 echo
 devicelist=$(lsblk -dplnx size -o name,size | grep -Ev "boot|rpmb|loop" | tac)
-echo -n "devices \n${devicelist}\n Enter device to use :"
+echo -n "devices: " 
+echo -n "${devicelist}" 
+echo -n "Enter device to use: "
 read device
 echo
 echo -n "Enter timezone: "
@@ -60,8 +58,7 @@ mkdir /mnt/boot
 mount "${part_boot}" /mnt/boot
 
 pacstrap /mnt base linux linux-firmware networkmanager
-genfstab -t PARTUUID /mnt >> /mnt/etc/fstab
-echo "${hostname}" > /mnt/etc/hostname
+genfstab -U /mnt >> /mnt/etc/fstab
 
 arch-chroot /mnt
 ln -sf /usr/share/zoneinfo/${timezone} /etc/localtime
@@ -74,6 +71,7 @@ echo "LANG=en_US.UTF-8" > /etc/locale.conf
 
 systemctl enable NetworkManager.service
 
+echo "${hostname}" > /etc/hostname
 mkinitcpio -P
 
 useradd -mU -s /usr/bin/zsh -G wheel,uucp,video,audio,storage,games,input "$user"
