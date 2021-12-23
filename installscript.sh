@@ -81,7 +81,7 @@ echo "${hostname}" > /etc/hostname
 mkinitcpio -P
 
 useradd --create-home ${user}
-usermod -aG wheel,audio,bluetooth,video
+usermod -aG wheel ${user}
 echo "$user:$password" | chpasswd
 echo "root:$password" | chpasswd
 
@@ -92,7 +92,7 @@ mount "${part_boot}" /boot/EFI
 grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck
 grub-mkconfig -o /boot/grub/grub.cfg
 
-pacman -Syu --noconfirm vim htop neofetch xorg i3 xorg-xinit mesa
+pacman -Syu --noconfirm vim htop neofetch xorg i3 xorg-xinit mesa noto-fonts rxvt-unicode
 echo "exec i3" >> /home/${user}/.xinitrc
 
 
