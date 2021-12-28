@@ -66,9 +66,10 @@ genfstab -U /mnt >> /mnt/etc/fstab
 cat << EOF > /mnt/part2.sh
 #!/bin/bash
 
+sed -i 's/#ParallelDownloads = 5/ParallelDownloads = 5/g' /etc/pacman.conf 
+
 ln -sf /usr/share/zoneinfo/${timezone} /etc/localtime
 hwclock --systohc
-
 
 echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
 locale-gen
@@ -92,9 +93,12 @@ mount "${part_boot}" /boot/EFI
 grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck
 grub-mkconfig -o /boot/grub/grub.cfg
 
-pacman -Syu --noconfirm vim htop neofetch xorg i3 xorg-xinit mesa noto-fonts rxvt-unicode
-echo "exec i3" >> /home/${user}/.xinitrc
-
+pacman -Syu --noconfirm vim htop neofetch xorg xorg-xinit mesa i3 kitty dmenu unzip lxappearance nnn feh htop mpv scrot lxsession lightdm firefox pulseaudio pulseaudio-bluetooth pulseaudio-alsa picom networkmanager nm-applet udiskie bluez blueman dunst unclutter xfce4-power-manager
+systemctl --enable lightdm.service
+systemctl --enable bluetooth.service
+wget https://raw.githubusercontent.com/nalinwadhwa02/dotfiles/master/i3/config >> /home/${user}/.config/i3/config
+wget https://raw.githubusercontent.com/nalinwadhwa02/dotfiles/master/autostart.sh >> /home/${user}/.config/autostart.sh
+chmod 700 /home/${user}/.config/autostart.sh
 
 exit
 EOF
