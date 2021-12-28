@@ -60,6 +60,8 @@ mkfs.f2fs -f "${part_root}"
 swapon "${part_swap}"
 mount "${part_root}" /mnt
 
+sed -i 's/#ParallelDownloads = 5/ParallelDownloads = 5/g' /etc/pacman.conf 
+
 pacstrap /mnt base linux linux-firmware
 genfstab -U /mnt >> /mnt/etc/fstab
 
