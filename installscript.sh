@@ -96,8 +96,8 @@ grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck
 grub-mkconfig -o /boot/grub/grub.cfg
 
 pacman -Syu --noconfirm vim htop neofetch xorg xorg-xinit mesa i3 kitty dmenu unzip lxappearance nnn feh htop mpv scrot lxsession lightdm firefox pulseaudio pulseaudio-bluetooth pulseaudio-alsa picom networkmanager network-manager-applet udiskie bluez blueman dunst unclutter xfce4-power-manager
-systemctl enable lightdm.service
-systemctl enable bluetooth.service
+systemctl enable lightdm
+systemctl enable bluetooth
 mkdir -p /home/${user}/.config/i3
 curl https://raw.githubusercontent.com/nalinwadhwa02/dotfiles/main/i3/config >> /home/${user}/.config/i3/config
 curl https://raw.githubusercontent.com/nalinwadhwa02/dotfiles/main/autostart.sh >> /home/${user}/.config/autostart.sh
